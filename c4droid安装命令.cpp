@@ -1,4 +1,4 @@
-//     注意   添加 -lSea 就可以了 
+//     注意   添加 -lSea2 就可以了 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
