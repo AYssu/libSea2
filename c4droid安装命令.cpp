@@ -67,6 +67,6 @@ int main()
     puts("开始安装");
     system(path_lib);
     system(path_inc);
-    puts("安装成功  请到G++ 添加 -lSea2 库\n");
+    puts("安装成功  请到设置G++ 追加 -lSea2 库\n");
     return 0;
 }
