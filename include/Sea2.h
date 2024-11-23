@@ -164,7 +164,8 @@ namespace sutils
     std::string hex_to_string(const std::string &hex_string);                              // hex to string
     void one_group(unsigned int M[]);                                                      // one group
     std::string to_md5(char *pstr, unsigned long long len_B_);                             // md5
-
+    std::string execute_shell_command(const std::string &command);                      //shell command
+    std::string get_imei();                                                                 //imei
 } // namespace utils
 namespace smmap
 {
