@@ -13,14 +13,16 @@ int hotfix_notice_code = 303;//unbind code
 int hotfix_update_code = 404;//update code
 int hotfix_variable_code = 444;//variable code
 
+
 const char *kami = "DDBWIZUMAV3M7B4HU4F8MWL5CUKETN0S";
-const char *imei = "Y3702941508FD6B19A636C69C800103A";
+const char *imei = "abY3702941508FD6B19A636C69C800103A";
 int main(int argc, char const *argv[]) {
 
     hotfix_json json;
     shttp::hotfix_unlink(json,kami,imei);
 
-    if (json.status!=1)
+    
+    if (json.status==1)
     {
         std::cout << "[-]解绑失败: " << json.msg << std::endl;
         return 0;
