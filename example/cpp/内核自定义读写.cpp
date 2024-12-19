@@ -1,12 +1,11 @@
-#include "include/Sea2.h"
+#include <Sea2.h>
 
-pid_t target_pid=0;
+pid_t target_pid = 0;
 std::string read_name = "kernel_read";
 
 std::string write_name = "kernel_write";
 
-std::unordered_map<std::string ,std::function<bool(uintptr_t address, void *buffer, size_t size)>> rw_function;
-
+std::unordered_map<std::string, std::function<bool(uintptr_t address, void* buffer, size_t size)>> rw_function;
 
 #include <algorithm>
 #include <chrono>
@@ -31,36 +30,32 @@ std::unordered_map<std::string ,std::function<bool(uintptr_t address, void *buff
 #include <vector>
 using namespace std;
 
-class c_driver
-{
+class c_driver {
 private:
     int fd;
     pid_t pid;
 
-    typedef struct _COPY_MEMORY
-    {
+    typedef struct _COPY_MEMORY {
         pid_t pid;
         uintptr_t address;
-        void *buffer;
+        void* buffer;
         size_t size;
     } COPY_MEMORY, *PCOPY_MEMORY;
 
-    typedef struct _MODULE_BASE
-    {
+    typedef struct _MODULE_BASE {
         pid_t pid;
-        char *name;
+        char* name;
         uintptr_t base;
     } MODULE_BASE, *PMODULE_BASE;
 
-    enum OPERATIONS
-    {
+    enum OPERATIONS {
         OP_INIT_KEY = 0x800,
         OP_READ_MEM = 0x801,
         OP_WRITE_MEM = 0x802,
         OP_MODULE_BASE = 0x803,
     };
 
-   bool StrAlpha(const char* str)
+    bool StrAlpha(const char* str)
     {
         for (int i = 0; i < 6; i++) {
             if (!isalpha(str[i])) {
@@ -152,19 +147,16 @@ private:
         return -1;
     }
 
-
 public:
     c_driver()
     {
-        char *device_name = NULL;
-        if (device_name == NULL)
-        {
+        char* device_name = NULL;
+        if (device_name == NULL) {
             fd = start_driver();
-            if (fd <= 0)
-            {
+            if (fd <= 0) {
                 printf("[-] 驱动异常或不存在,请安装QX11.4\n");
                 exit(0);
-            }else {
+            } else {
                 printf("[-] 驱动加载成功\n");
             }
         }
@@ -172,8 +164,7 @@ public:
 
     ~c_driver()
     {
-        if (fd > 0)
-        {
+        if (fd > 0) {
             printf("[-] 驱动关闭成功!\n");
             close(fd);
         }
@@ -181,29 +172,27 @@ public:
 
     void init(pid_t pid) { this->pid = pid; }
 
-    bool read(uintptr_t address, void *buffer, size_t size)
+    bool read(uintptr_t address, void* buffer, size_t size)
     {
         COPY_MEMORY cm;
         cm.pid = this->pid;
         cm.address = address;
         cm.buffer = buffer;
         cm.size = size;
-        if (ioctl(fd, OP_READ_MEM, &cm) != 0)
-        {
+        if (ioctl(fd, OP_READ_MEM, &cm) != 0) {
             return false;
         }
         return true;
     }
 
-    bool write(uintptr_t address, void *buffer, size_t size)
+    bool write(uintptr_t address, void* buffer, size_t size)
     {
         COPY_MEMORY cm;
         cm.pid = this->pid;
         cm.address = address;
         cm.buffer = buffer;
         cm.size = size;
-        if (ioctl(fd, OP_WRITE_MEM, &cm) != 0)
-        {
+        if (ioctl(fd, OP_WRITE_MEM, &cm) != 0) {
             return false;
         }
         return true;
@@ -224,31 +213,29 @@ public:
         return this->write(address, &value, sizeof(T));
     }
 
-    uintptr_t get_module_base(const char *name)
+    uintptr_t get_module_base(const char* name)
     {
         MODULE_BASE mb;
         char buf[0x100];
         strcpy(buf, name);
         mb.pid = this->pid;
         mb.name = buf;
-        if (ioctl(fd, OP_MODULE_BASE, &mb) != 0)
-        {
+        if (ioctl(fd, OP_MODULE_BASE, &mb) != 0) {
             return 0;
         }
         return mb.base;
     }
 };
 
-c_driver *driver = new c_driver();
-bool vm_readv(uintptr_t address, void *buffer, size_t size)
+c_driver* driver = new c_driver();
+bool vm_readv(uintptr_t address, void* buffer, size_t size)
 {
     return driver->read(address, buffer, size);
 }
-bool vm_writev(uintptr_t address, void *buffer, size_t size)
+bool vm_writev(uintptr_t address, void* buffer, size_t size)
 {
     return driver->write(address, buffer, size);
 }
-
 
 bool init_pid(pid_t pid)
 {
@@ -256,23 +243,20 @@ bool init_pid(pid_t pid)
     return true;
 }
 
-int main()
+int main(int argc, char** argv)
 {
-	auto pid = smemory::initalize_by_game_package_return_pid("com.pubg.newstate"); // initalize by game package
-	
-	auto base =smemory::get_module_base_pro("libUE4.so",1,"rw");
-	printf("进程pid %d %lx\n",pid,base);
-	init_pid(pid); // 进程读写需要的初始化pid
+    auto pid = smemory::initalize_by_game_package_return_pid("com.pubg.newstate"); // initalize by game package
 
-	rw_function.insert({"kernel_read",vm_readv});
-	rw_function.insert({"kernel_write",vm_writev});
-	smemory::memory_debug(false); //打印自定义读写实例
-	
+    auto base = smemory::get_module_base_pro("libUE4.so", 1, "rw");
+    printf("进程pid %d %lx\n", pid, base);
+    init_pid(pid); // 进程读写需要的初始化pid
 
+    rw_function.insert({ "kernel_read", vm_readv });
+    rw_function.insert({ "kernel_write", vm_writev });
+    smemory::memory_debug(false); //打印自定义读写实例
 
-	auto i = smemory::read_int(base);
-	printf("读测试 %d \n",i);
-	
-	
-	return 0;
+    auto i = smemory::read_int(base);
+    printf("读测试 %d \n", i);
+
+    return 0;
 }

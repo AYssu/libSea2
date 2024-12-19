@@ -1,69 +1,29 @@
-//#include "include/json.hpp"
-#include "include/Sea2.h"
+#include <Sea2.h>
 
-struct game_data {
-    float x;
-    float y;
-    int id;
-    float hp;
-    int view;
-};
-
-struct game_data_list {
-    game_data data[200];
-    game_data team[200];
-    int team_count;
-    int count;
-    int rientation;
-};
-game_data_list *game2_ = new game_data_list();
-
-int main()
+int main(int argc, char** argv)
 {
-    game2_ = (game_data_list*) smmap::build_mmap_void("/storage/emulated/0/sgame/sgame.mmap", false, sizeof(game_data_list));
-    
-    game2_->count = 1;
-    game2_->data[0].hp =100;
-    game2_->data[0].id =196;
-    game2_->data[0].x =100 ;
-    game2_->data[0].y =25;
-    game2_->data[0].view =257;
-    
-    game2_->team_count = 5;
-    
-    game2_->team[0].hp =149;
-    game2_->team[0].id =502;
-    game2_->team[0].x =100 ;
-    game2_->team[0].y =25;
-    game2_->team[0].view =257;
-    
-    
-    
-    game2_->team[1].hp =100;
-    game2_->team[1].id =136;
-    game2_->team[1].x =100 ;
-    game2_->team[1].y =25;
-    game2_->team[1].view =1;
-    
-    
-    game2_->team[2].hp =100;
-    game2_->team[2].id =152;
-    game2_->team[2].x =100 ;
-    game2_->team[2].y =25;
-    game2_->team[2].view =1;
-    
-    game2_->team[3].hp =100;
-    game2_->team[3].id =197;
-    game2_->team[3].x =100 ;
-    game2_->team[3].y =25;
-    game2_->team[3].view =257;
-    
-    
-    game2_->team[4].hp =100;
-    game2_->team[4].id =577;
-    game2_->team[4].x =100 ;
-    game2_->team[4].y =25;
-    game2_->team[4].view =257;
-    
-	return 0;
+    struct Response {
+        char name[4096];
+        float x;
+        float y;
+        float w;
+        //....
+    };
+
+    Response* response; // 好习惯嗷
+    Response* recive;
+
+    response = (Response*)smmap::build_mmap_void("/sdcard/mmap", false, sizeof(Response)); // false 可读可写
+    recive = (Response*)smmap::build_mmap_void("/sdcard/mmap", true, sizeof(Response)); // true 只读 只用来访问数据
+
+    for (size_t i = 0; i < 10; i++) {
+        sprintf(response->name, "%s", "阿夜");
+        response->x = (float)i; // 更改response recive映射的地址相同也会随之改变 实现最高效率数据交互
+        response->y = (float)i * 2;
+        response->w = (float)i * 3;
+        printf("name-> %s X-> %.2f Y-> %.2f W -> %.2f\n", recive->name, recive->x, recive->y, recive->w); // 注意这边是打印的recive的结构体映射
+        usleep(30000);
+    }
+
+    return 0;
 }

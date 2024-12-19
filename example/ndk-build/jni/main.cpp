@@ -1,4 +1,4 @@
-#include "../../../include/Sea2.h"
+#include <Sea2.h>
 
 int main(int argc, char **argv)
 {

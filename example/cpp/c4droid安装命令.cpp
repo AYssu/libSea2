@@ -51,7 +51,7 @@ int main()
 	const char*env=getenv("PATH");	
 	int n=strpos(env,"/bintools");	
 	strncpy(path,env,n);
-	strcpy(path_inc,"cp ../../include/Sea2.h ");
+	strcpy(path_inc,"cp ../../include/*.h* ");
 	strcat(path_inc,path);
 	
 	#if defined (__arm64__)|| defined (__aarch64__)
