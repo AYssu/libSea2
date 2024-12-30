@@ -25,8 +25,10 @@ int main(int argc, char** argv)
     // NOLINTNEXTLINE
     memset(&json3, 0, sizeof(sverify::verify_json));
     sverify::get_variables(json3);
+    
     if (json3.success) {
         json response = json::parse(json3.variables);
+        std::cout << response.dump() << std::endl;
         auto success = response["success"].is_null()?false:response["success"].get<bool>();
         if(success) {
             auto data = response["PUBG2"];

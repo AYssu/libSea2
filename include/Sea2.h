@@ -74,6 +74,7 @@ namespace sverify {
         std::string notice;   // 获取的公告
         std::string variables;// 获取的变量
         std::string core;     //核心数据
+        std::string token; // 心跳token
 
         std::string update_url;    // 更新链接
         std::string update_message;// 更新信息
@@ -87,6 +88,11 @@ namespace sverify {
     bool get_variables(verify_json &json, bool log = false);                                                            // 获取程序变量
     bool bind_card(const std::string &kami_, const std::string &imei_, sverify::verify_json &json_, bool log = false);  // 单码卡密绑定
     bool unbind_card(const std::string &kami_, const std::string &imei_, sverify::verify_json &json_, bool log = false);// 单码卡密换绑
+    bool heart_beat(const std::string &cid, const std::string &imei_,const std::string &token_, sverify::verify_json &json_, bool log = false);// 单码卡密换绑
+
+  
+    void init_method(); // 初始化逻辑方法
+
 
 }
 

@@ -14,7 +14,7 @@ std::string verify_project_id = OBFUSCATE("10018");                             
 std::string verify_project_key = OBFUSCATE("KWN1KBXDE9FA");                                                       //程序密钥
 std::string verify_project_base64 = OBFUSCATE("UCPm8YnZsldF1pwVyhoKu3MkAJW2cDREfLSgxqT/iHabN0Qt5z6Ivj4B+OeGX7r9");// base64自定义编码集
 
-std::string verify_project_public_key = OBFUSCATE("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw0lDF9vj2o0KdiGeguV9fig+DCf+4WTf6hs5KDw7tFtqDFk9C6giFCP2K5SHNjH/PFYQ/Arn+ccBZwO/5wpz/HzKF41zgoF5gyEV1T1FoqjgC40HO7iXM1WO0ORTS4/T7U1obwHf42pfm4kjBkl/yzngPSdK7aBffI50kLc4gDlRQLffEP3ilKiEJ/HSOqtunadAXWUrnecn0CRdu+gZ1FlfLO7D1qcqaOl4dPtEgn/1tzr77fUMs7rElxaQvbV51R3HTuLz9HZfSg4ZNOqMzEx424T9XTvht0WKisTyhBd/xWUWevwYOMaarHDlJoqU/Hn04ALrrWpTeWAYW0rthQIDAQAB");// rsa公钥
+std::string verify_project_public_key = OBFUSCATE("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw/93N7FvkyNqq2i2aGLtf+RjnqWlcxHkfynzz4shAB2KCy8lrARswGdJRlqSl9xayIunaD92ZI1HhvDiXa5st6rIRBI6OXtaFv1Pf+HkKH/xnXWWgijWjZM/38omVvtQ5zc0xyjVdRwzJNIZ80DKgNRNQLff2KbPWDtvMQJjXRkHtpl7AO2aAwAvlulnnawVoZAA+cvEmD+gRDkhtgYAOGKcJ3ITF78poG8Nl6mF3Zn2eq1EEx7B7MUHRcDTq2dbrFigm5I6XaX/7Ya7VVfJP0855MhqIZVOc46EDg+BHoekF6gjh5ZXdASZ6B8W8EDhzdfNOf6QSb7Hne3+JlnxjQIDAQAB");
 
 std::string verify_notice_link = OBFUSCATE("MISZX3JLIWZ1");// 获取公告的链接
 std::string verify_notice_code = OBFUSCATE("200");         // 获取公告的code
@@ -30,5 +30,14 @@ std::string verify_unbind_link = OBFUSCATE("SL19ZU9K9IKE");// 解绑/换绑链�
 
 std::string verify_variable_link = OBFUSCATE("9OBL5CHT35OP");// 变量链接
 std::string verify_variable_code = OBFUSCATE("200");         // 变量返回code
+
+std::string verify_heart_link = OBFUSCATE("QRL5NK61OO50") ;// 心跳验证 返回数据无加密 无需设置code
+
+std::string verify_heart_code = OBFUSCATE("200");// 心跳返回code
+
+
+
+std::string main_method_name = OBFUSCATE("main"); // 主方法
+std::unordered_map<std::string ,std::function<void()>> method_map;
 
 int verify_encryption = 1;// 默认1 base64 自定义编码集 2 rsa非对称加密
