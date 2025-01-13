@@ -127,6 +127,11 @@ namespace sutils {
     void string_load_vector(std::vector<long> &vec, const std::string &str);     // 将字符串转换vector
     void string_load_vector(std::vector<int> &vec, const std::string &str);      // 将字符串转换vector
     void string_load_vector(std::vector<float> &vec, const std::string &str);    // 将字符串转换vector
+
+    int get_input_int(const char *msg); // 获取用户输入的整数
+    std::string get_input_string(const char *msg);// 获取用户输入的字符串
+    uintptr_t get_input_uintptr_t(const char *msg);// 获取用户输入的无符号整数
+    void get_input_stop();// 获取用户输入的任意字符并继续
 }// namespace utils
 
 namespace smmap {
@@ -156,7 +161,7 @@ namespace smemory {
 
     pid_t get_target_pid();        // get target pid
     bool set_target_pid(pid_t pid);// set target pid
-
+    bool disable_syscall(bool disable,bool log); // disable syscall 如果你使用其他读写可用直接关闭syscall
     pid_t get_pid_by_package_name(const char *package_name);// get pid by game package
     bool memory_debug(bool debug);                          // show memory debug infomation
 
@@ -183,10 +188,12 @@ namespace smemory {
     double read_double_min(uintptr_t address, double min);            // get value set min value
     double read_double_mix(uintptr_t address, double max, double min);// get value set max and min value
 
+    int read_byte(uintptr_t address); // get byte
+    
     long write_float(uintptr_t address, float value);  // write float
     long write_int(uintptr_t address, int value);      // write int
     long write_double(uintptr_t address, double value);// write double
-
+    long write_byte(uintptr_t address, int value);       // write byte
     uintptr_t get_module_base(const char *module_name);                                  // get module base
     uintptr_t get_module_base_pro(const char *module_name, int index);                   // get module base cb bss if module_name is contains ":bss"
     uintptr_t get_module_base_pro(const char *module_name, int index, const char *split);// get module base cb bss if module_name is contains ":bss" and split
@@ -195,6 +202,13 @@ namespace smemory {
     uintptr_t read_pointer32(uintptr_t original_address, std::vector<uintptr_t> &vec);// read pointer with offset vector 32bit
 
     void get_buffer(char *buf, uintptr_t address);// read buffer from address to buf
+    
+    
+    template<typename... Args>
+    uintptr_t read_pointer64(uintptr_t start, Args &&...args);
+    template<typename... Args>
+    uintptr_t read_pointer32(uintptr_t start, Args &&...args);
+    void get_buffer(char *buf, uintptr_t address); // read buffer from address to buf
 
 }// namespace smemory
 #endif// SEA2_SEA2_H
